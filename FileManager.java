@@ -1,4 +1,5 @@
-package ex;
+package fileexplorer;
+
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -6,60 +7,80 @@ import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Container;
 import java.awt.Component;
-import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.*;
-import java.awt.image.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
+
+
+
 import javax.swing.table.*;
 import javax.swing.filechooser.FileSystemView;
+
 import javax.imageio.ImageIO;
+
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
+
 import java.io.*;
 import java.nio.channels.FileChannel;
-import java.net.URL;
-public class FileManager {
 
-    public static final String APP_TITLE = "FileMan";
+import java.net.URL;
+
+
+public class FileExplorer {
+
+  
+    public static final String APP_TITLE = "FileExplorer";
+  
     private Desktop desktop;
+   
     private FileSystemView fileSystemView;
+
     private File currentFile;
+
     private JPanel gui;
     private JTree tree;
     private DefaultTreeModel treeModel;
     private JTable table;
     private JProgressBar progressBar;
+  
     private FileTableModel fileTableModel;
     private ListSelectionListener listSelectionListener;
     private boolean cellSizesSet = false;
     private int rowIconPadding = 6;
-    private JButton openFile;
+
+  
+    private JButton OppenFolder;
+    private JButton deleteFile;
+  
     private JLabel fileName;
     private JTextField path;
     private JLabel date;
     private JLabel size;
     private JRadioButton isDirectory;
     private JRadioButton isFile;
-    private JPanel newFilePanel;
-    private JRadioButton newTypeFile;
-    private JTextField name;
 
+  
     public Container getGui() {
         if (gui==null) {
             gui = new JPanel(new BorderLayout(3,3));
             gui.setBorder(new EmptyBorder(5,5,5,5));
+
             fileSystemView = FileSystemView.getFileSystemView();
             desktop = Desktop.getDesktop();
+
             JPanel detailView = new JPanel(new BorderLayout(3,3));
+
+
             table = new JTable();
             table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             table.setAutoCreateRowSorter(true);
             table.setShowVerticalLines(false);
+
             listSelectionListener = new ListSelectionListener() {
                 @Override
                 public void valueChanged(ListSelectionEvent lse) {
@@ -72,6 +93,8 @@ public class FileManager {
             Dimension d = tableScroll.getPreferredSize();
             tableScroll.setPreferredSize(new Dimension((int)d.getWidth(), (int)d.getHeight()/2));
             detailView.add(tableScroll, BorderLayout.CENTER);
+
+
             DefaultMutableTreeNode root = new DefaultMutableTreeNode();
             treeModel = new DefaultTreeModel(root);
 
@@ -83,35 +106,45 @@ public class FileManager {
                     setFileDetails((File)node.getUserObject());
                 }
             };
+
+            //hiển thị hệ thống tập tin gốc
             File[] roots = fileSystemView.getRoots();
             for (File fileSystemRoot : roots) {
                 DefaultMutableTreeNode node = new DefaultMutableTreeNode(fileSystemRoot);
                 root.add( node );
-             
+       
+     
                 File[] files = fileSystemView.getFiles(fileSystemRoot, true);
                 for (File file : files) {
                     if (file.isDirectory()) {
                         node.add(new DefaultMutableTreeNode(file));
                     }
                 }
-                //
+     
             }
+
             tree = new JTree(treeModel);
             tree.setRootVisible(false);
             tree.addTreeSelectionListener(treeSelectionListener);
             tree.setCellRenderer(new FileTreeCellRenderer());
             tree.expandRow(0);
             JScrollPane treeScroll = new JScrollPane(tree);
+
+   
             tree.setVisibleRowCount(15);
+
             Dimension preferredSize = treeScroll.getPreferredSize();
             Dimension widePreferred = new Dimension(
-                200,
+                200, 
                 (int)preferredSize.getHeight());
             treeScroll.setPreferredSize( widePreferred );
+         // chi tiết cho File
             JPanel fileMainDetails = new JPanel(new BorderLayout(4,2));
             fileMainDetails.setBorder(new EmptyBorder(0,6,0,6));
+
             JPanel fileDetailsLabels = new JPanel(new GridLayout(0,1,2,2));
             fileMainDetails.add(fileDetailsLabels, BorderLayout.WEST);
+
             JPanel fileDetailsValues = new JPanel(new GridLayout(0,1,2,2));
             fileMainDetails.add(fileDetailsValues, BorderLayout.CENTER);
 
@@ -146,13 +179,13 @@ public class FileManager {
             }
 
             JToolBar toolBar = new JToolBar();
-
+       
             toolBar.setFloatable(false);
 
-            openFile = new JButton(" Open");
-            openFile.setMnemonic('o');
+            OppenFolder = new JButton("Open");
+            OppenFolder.setMnemonic('o');
 
-            openFile.addActionListener(new ActionListener(){
+            OppenFolder.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent ae) {
                     try {
                         desktop.open(currentFile);
@@ -162,11 +195,27 @@ public class FileManager {
                     gui.repaint();
                 }
             });
-            toolBar.add(openFile); 
-           
+            toolBar.add(OppenFolder);
+
+          
+            OppenFolder.setEnabled(desktop.isSupported(Desktop.Action.OPEN));
+
+            toolBar.addSeparator();
+
+            toolBar.addSeparator();
+
             JPanel fileView = new JPanel(new BorderLayout(3,3));
 
             fileView.add(toolBar,BorderLayout.NORTH);
+            
+                        deleteFile = new JButton("Delete");
+                        deleteFile.setMnemonic('d');
+                        deleteFile.addActionListener(new ActionListener(){
+                            public void actionPerformed(ActionEvent ae) {
+                                deleteFile();
+                            }
+                        });
+                        toolBar.add(deleteFile);
             fileView.add(fileMainDetails,BorderLayout.CENTER);
 
             detailView.add(fileView, BorderLayout.SOUTH);
@@ -184,12 +233,63 @@ public class FileManager {
 
             gui.add(simpleOutput, BorderLayout.SOUTH);
 
+            JSplitPane splitPane1 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, treeScroll, detailView);
+
+			JPanel panel = new JPanel();
+			treeScroll.setColumnHeaderView(panel);
+			panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+
+			JButton btnNewButton_1 = new JButton("Back");
+			btnNewButton_1.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+				}
+			});
+			btnNewButton_1.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if (e.getClickCount() == 1) {
+						File back = new File(path.getText());
+						if (back.getParent() == null) {
+							back = new File(path.getText());
+						} else {
+							File previousPath = new File(back.getParent());
+							DefaultMutableTreeNode node = new DefaultMutableTreeNode(previousPath);
+							showChildren(node);
+							path.setText(back.getParent());
+						}
+					}
+				}
+			});
+			btnNewButton_1.setIcon(
+					new ImageIcon(FileExplorer.class.getResource("/com/sun/javafx/scene/web/skin/Undo_16x16_JFX.png")));
+			btnNewButton_1.setHorizontalAlignment(SwingConstants.LEFT);
+			panel.add(btnNewButton_1);
+
+			JButton btnNewButton = new JButton("Next");
+			btnNewButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+		
+					String name = path.getText();
+					File next = new File(name);
+					if (next.isDirectory()) {
+						DefaultMutableTreeNode node = new DefaultMutableTreeNode(next);
+						showChildren(node);
+					}
+				}
+			});
+			btnNewButton.setIcon(
+					new ImageIcon(FileExplorer.class.getResource("/com/sun/javafx/scene/web/skin/Redo_16x16_JFX.png")));
+			panel.add(btnNewButton);
+			splitPane1.setBounds(5, 0, 965, 373);
+			gui.add(splitPane1);
+
         }
         return gui;
     }
-
-    public void showRootFile() {
     
+    // đảm bảo các tệp chính được hiển thị
+    public void showRootFile() {
+
         tree.setSelectionInterval(0,0);
     }
 
@@ -204,9 +304,58 @@ public class FileManager {
                 return treePath;
             }
         }
+   
         return null;
     }
-  
+
+    private void deleteFile() {
+        if (currentFile==null) {
+            showErrorMessage("No file selected for deletion.","Select File");
+            return;
+        }
+
+        int result = JOptionPane.showConfirmDialog(
+            gui,
+            "Are you sure you want to delete this file?",
+            "Delete File",
+            JOptionPane.ERROR_MESSAGE
+            );
+        if (result==JOptionPane.OK_OPTION) {
+            try {
+                System.out.println("currentFile: " + currentFile);
+                TreePath parentPath = findTreePath(currentFile.getParentFile());
+                System.out.println("parentPath: " + parentPath);
+                DefaultMutableTreeNode parentNode =
+                    (DefaultMutableTreeNode)parentPath.getLastPathComponent();
+                System.out.println("parentNode: " + parentNode);
+
+                boolean directory = currentFile.isDirectory();
+                boolean deleted = currentFile.delete();
+                if (deleted) {
+                    if (directory) {
+                  
+                        TreePath currentPath = findTreePath(currentFile);
+                        System.out.println(currentPath);
+                        DefaultMutableTreeNode currentNode =
+                            (DefaultMutableTreeNode)currentPath.getLastPathComponent();
+
+                        treeModel.removeNodeFromParent(currentNode);
+                    }
+
+                    showChildren(parentNode);
+                } else {
+                    String msg = "The file '" +
+                        currentFile +
+                        "' could not be deleted.";
+                    showErrorMessage(msg,"Delete Failed");
+                }
+            } catch(Throwable t) {
+                showThrowable(t);
+            }
+        }
+        gui.repaint();
+    }
+
     private void showErrorMessage(String errorMessage, String errorTitle) {
         JOptionPane.showMessageDialog(
             gui,
@@ -227,6 +376,7 @@ public class FileManager {
         gui.repaint();
     }
 
+  
     private void setTableData(final File[] files) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -240,6 +390,7 @@ public class FileManager {
                 if (!cellSizesSet) {
                     Icon icon = fileSystemView.getSystemIcon(files[0]);
 
+                    // size  icons
                     table.setRowHeight( icon.getIconHeight()+rowIconPadding );
 
                     setColumnWidth(0,-1);
@@ -261,14 +412,18 @@ public class FileManager {
     private void setColumnWidth(int column, int width) {
         TableColumn tableColumn = table.getColumnModel().getColumn(column);
         if (width<0) {
+        
             JLabel label = new JLabel( (String)tableColumn.getHeaderValue() );
             Dimension preferred = label.getPreferredSize();
+         
             width = (int)preferred.getWidth()+14;
         }
         tableColumn.setPreferredWidth(width);
         tableColumn.setMaxWidth(width);
         tableColumn.setMinWidth(width);
     }
+
+  
     private void showChildren(final DefaultMutableTreeNode node) {
         tree.setEnabled(false);
         progressBar.setVisible(true);
@@ -308,6 +463,8 @@ public class FileManager {
         };
         worker.execute();
     }
+
+  
     private void setFileDetails(File file) {
         currentFile = file;
         Icon icon = fileSystemView.getSystemIcon(file);
@@ -316,7 +473,9 @@ public class FileManager {
         path.setText(file.getPath());
         date.setText(new Date(file.lastModified()).toString());
         size.setText(file.length() + " bytes");
-       
+
+        isDirectory.setSelected(file.isDirectory());
+
         isFile.setSelected(file.isFile());
 
         JFrame f = (JFrame)gui.getTopLevelAncestor();
@@ -330,50 +489,24 @@ public class FileManager {
         gui.repaint();
     }
 
-    public static boolean copyFile(File from, File to) throws IOException {
-
-        boolean created = to.createNewFile();
-
-        if (created) {
-            FileChannel fromChannel = null;
-            FileChannel toChannel = null;
-            try {
-                fromChannel = new FileInputStream(from).getChannel();
-                toChannel = new FileOutputStream(to).getChannel();
-
-                toChannel.transferFrom(fromChannel, 0, fromChannel.size());
-                to.setReadable(from.canRead());
-                to.setWritable(from.canWrite());
-                to.setExecutable(from.canExecute());
-            } finally {
-                if (fromChannel != null) {
-                    fromChannel.close();
-                }
-                if (toChannel != null) {
-                    toChannel.close();
-                }
-                return false;
-            }
-        }
-        return created;
-    }
-
+  
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 try {
+                   
                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                 } catch(Exception weTried) {
                 }
                 JFrame f = new JFrame(APP_TITLE);
                 f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-                FileManager fileManager = new FileManager();
-                f.setContentPane(fileManager.getGui());
+                FileExplorer FileExplorer = new FileExplorer();
+                f.setContentPane(FileExplorer.getGui());
 
                 try {
-                    URL urlBig = fileManager.getClass().getResource("fm-icon-32x32.png");
-                    URL urlSmall = fileManager.getClass().getResource("fm-icon-16x16.png");
+                    URL urlBig = FileExplorer.getClass().getResource("fm-icon-32x32.png");
+                    URL urlSmall = FileExplorer.getClass().getResource("fm-icon-16x16.png");
                     ArrayList<Image> images = new ArrayList<Image>();
                     images.add( ImageIO.read(urlBig) );
                     images.add( ImageIO.read(urlSmall) );
@@ -385,11 +518,12 @@ public class FileManager {
                 f.setMinimumSize(f.getSize());
                 f.setVisible(true);
 
-                fileManager.showRootFile();
+                FileExplorer.showRootFile();
             }
         });
     }
 }
+
 
 class FileTableModel extends AbstractTableModel {
 
@@ -401,6 +535,7 @@ class FileTableModel extends AbstractTableModel {
         "Path/name",
         "Size",
         "Last Modified",
+
     };
 
     FileTableModel() {
@@ -424,7 +559,8 @@ class FileTableModel extends AbstractTableModel {
                 return file.length();
             case 4:
                 return file.lastModified();
- 
+            case 5:
+  
             default:
                 System.err.println("Logic Error");
         }
@@ -443,7 +579,12 @@ class FileTableModel extends AbstractTableModel {
                 return Long.class;
             case 4:
                 return Date.class;
-
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+                return Boolean.class;
         }
         return String.class;
     }
@@ -465,6 +606,7 @@ class FileTableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
 }
+
 
 class FileTreeCellRenderer extends DefaultTreeCellRenderer {
 

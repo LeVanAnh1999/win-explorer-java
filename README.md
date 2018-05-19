@@ -3,7 +3,7 @@ Tên SV : Lê Văn Ánh
 
 Lớp : 17IT2
 
-Mã SV : 17IT112
+Mã SV : 17IT041
 
 Email : lvanh.17it2@sict.udn.vn
 link video:https://www.youtube.com/watch?v=mBCQ7h3iAww&feature=youtu.be

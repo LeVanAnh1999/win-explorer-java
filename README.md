@@ -6,7 +6,7 @@ Lớp : 17IT2
 Mã SV : 17IT041
 
 Email : lvanh.17it2@sict.udn.vn
-link video:https://www.youtube.com/watch?v=mBCQ7h3iAww&feature=youtu.be
+Link video hướng dẫn sử dụng : https://youtu.be/mBCQ7h3iAww
 
 Đề 015
 
@@ -18,7 +18,7 @@ Câu 2: Thực hiện chức năng mở thư mục
 
 Link video hướng dẫn sử dụng : 
 
-Cách chạy Code
+
 - Chức năng chính
 Open Folder
 Để thực hiện chức năng mở thư mục (folder):Click chuột phải vào thư mục cần mở, chọn Open.

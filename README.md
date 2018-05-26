@@ -10,18 +10,18 @@ Link video hướng dẫn sử dụng : https://youtu.be/mBCQ7h3iAww
 
 Đề 015
 
-Câu 1 : Thiết kế giao diện File Explorer
+Cách chạy code:
 
-Câu 2: Thực hiện chức năng mở thư mục
+Tải project từ github
 
-+Chức năng phụ : Delete File
+Mở cmd
 
-Link video hướng dẫn sử dụng : 
+Dùng lệnh cd chuyển đến thư mục chưa source code
 
+Ví dụ: cd C:\Users\PC\eclipse-workspace\fileexplorer\src
+Biên dịch bằng lệnh javac:
 
-- Chức năng chính
-Open Folder
-Để thực hiện chức năng mở thư mục (folder):Click chuột phải vào thư mục cần mở, chọn Open.
--Chức năng phụ
-Delete File
-Để thực hiên chức năng xóa một tệp tin (File): Click chuột phải vào thư mục hay tập tin muốn xóa, chọn Delete. Hộp thoại Select an Option xác nhận xóa xuất hiện với dòng thông báo: Are you sure want to delete [tên file hay thư mục cần xóa]? Chọn Yes để xóa, No hay Cancel để Hủy thao tác này
+javac fileexplorer\FileExplorer.java
+Chạy bằng lệnh java:
+
+java fileexplorer.FileExplorer

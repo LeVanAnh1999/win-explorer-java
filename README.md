@@ -13,6 +13,7 @@ Link video hướng dẫn sử dụng : https://youtu.be/mBCQ7h3iAww
   Câu 1:  Thiết kế giao diện phần mềm file Explore.
 
   Câu 2: Thực hiện chức năng mở thư mục(Open Folder).
+  
   Chức năng bổ sung: chức năng xóa File( Delete File).
 
 Cách chạy code:

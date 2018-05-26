@@ -91,7 +91,7 @@ Mở các thư mục bằng cách click 2 lần vào thư mục trong JTree
 Chức năng chính:
 Mở tập tin:
 
-Chọn tập tin cần mở
+Chọn thư mục cần mở
 
 Sau đó: click vào "OpenFolder"
 

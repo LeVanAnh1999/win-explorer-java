@@ -10,18 +10,23 @@ Link video hướng dẫn sử dụng : https://youtu.be/mBCQ7h3iAww
 
 Đề 015
 
+  Câu 1:  Thiết kế giao diện phần mềm file Explore.
+
+  Câu 2: Thực hiện chức năng mở thư mục(Open Folder).
+  Chức năng bổ sung: chức năng xóa File( Delete File).
+
 Cách chạy code:
 
-Tải project từ github
+  1.Tải project từ github
 
-Mở cmd
+  2.Mở cmd
 
-Dùng lệnh cd chuyển đến thư mục chưa source code
+  3.Dùng lệnh cd chuyển đến thư mục chứa source code
 
-Ví dụ: cd C:\Users\PC\eclipse-workspace\fileexplorer\src
-Biên dịch bằng lệnh javac:
+  Ví dụ: cd C:\Users\PC\eclipse-workspace\fileexplorer\src
+  4.Biên dịch bằng lệnh javac:
 
-javac fileexplorer\FileExplorer.java
-Chạy bằng lệnh java:
+    javac fileexplorer\FileExplorer.java
+  5.Chạy bằng lệnh java:
 
-java fileexplorer.FileExplorer
+    java fileexplorer.FileExplorer

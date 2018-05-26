@@ -37,32 +37,42 @@ Biên dịch các dòng lệnh:
 public Container getGui():
 
 Hiển thị các thành phần và chức năng của phần mềm
-public void showRootFile():
+
+  public void showRootFile():
 
 Hiển thị các tệp lên jtree và jtable từ lớp FileTableModel.
-private void showErrorMessage():
+
+  private void showErrorMessage():
 
 Hàm dùng để hiển thị tin nhắn báo lỗi
-private void setTableData(final File[] files):
+
+  private void setTableData(final File[] files):
 
 Dùng để cài đặt dự liệu cho table
-private void setColumnWidth(int column, int width):
+
+  private void setColumnWidth(int column, int width):
 
 Dùng để cài đặt kích cỡ cho table
-private void showChildren(final DefaultMutableTreeNode node):
+  
+  private void showChildren(final DefaultMutableTreeNode node):
 
 Hiển thị các cành con của Tree
-private void setFileDetails(File file):
+  
+  private void setFileDetails(File file):
 
 Cài đặt thông tin cho file
-class FileTableModel extends AbstractTableModel
+  
+  class FileTableModel extends AbstractTableModel
 
 Thực hiện chứ năng hiển thị các cột thông tin lên Table
-public Component getTreeCellRendererComponent():
+  
+  public Component getTreeCellRendererComponent():
 
 Thực hiện chức năng cài đặt icon, tên file và lấy đường dẫn cho các Node của JTree
-public Object getValueAt(int row, int column):
+
+  public Object getValueAt(int row, int column):
 
 Thực hiện chức năng cài đặt thông tin cho các file
-private void newFile():
+  
+  private void newFile():
 

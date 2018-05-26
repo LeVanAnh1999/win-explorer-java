@@ -82,3 +82,28 @@ Thực hiện chức năng cài đặt thông tin cho các file
     private JButton deleteFile;
   Nút xóa File
 
+
+
+HƯỚNG DẪN SỬ DỤNG:
+
+Mở các thư mục bằng cách click 2 lần vào thư mục trong JTree
+
+Chức năng chính:
+Mở tập tin:
+
+Chọn tập tin cần mở
+
+Sau đó: click vào "OpenFolder"
+
+Chức năng làm thêm:
+
+
+
+
+Xóa File
+
+Kích chuột vào file muốn xóa
+
+Nhấn nút Delete
+
+Xuất hiện hộp thoại "Are you sure you want to delete this file?" , nhấn OK để xác nhận xóa file, nhấn No để hủy thao tác
